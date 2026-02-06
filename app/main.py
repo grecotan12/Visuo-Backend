@@ -17,6 +17,11 @@ from typing import List
 app = FastAPI()
 
 # TESTING
+AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCSES_KEY = os.getenv("AWS_SECRET_ACCSES_KEY")
+AWS_REGION = os.getenv("AWS_REGION")
+AWS_S3_BUCKET = os.getenv("AWS_S3_BUCKET")
+SERPDEV_API_KEY = os.getenv("SERPDEV_API_KEY")
 
 s3 = boto3.client(
     "s3",
