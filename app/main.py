@@ -1,5 +1,5 @@
 from fastapi import FastAPI, File, UploadFile
-from object_detector import ObjectDetector
+from app.object_detector import ObjectDetector
 import cv2
 import numpy as np
 import base64
@@ -9,7 +9,7 @@ import uuid
 import boto3
 import json
 import http.client
-from database_ops import DatabaseOps
+from app.database_ops import DatabaseOps
 import requests
 from pydantic import BaseModel
 from typing import List
