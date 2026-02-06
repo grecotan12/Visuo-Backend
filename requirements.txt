@@ -1,6 +1,8 @@
 fastapi
+uvicorn[standard]
+opencv-python
 numpy
-ultralytics
+ultralytics[cpu]
 serpapi
 boto3
 requests
