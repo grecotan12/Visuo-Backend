@@ -1,7 +1,9 @@
 fastapi
 numpy
 ultralytics
-serpapi
+google-search-results
 boto3
 requests
 pydantic
+python-multipart
+apt install -y libgl1 libglib2.0-0 // UBUNTU
