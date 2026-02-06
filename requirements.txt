@@ -1,7 +1,10 @@
 fastapi
 uvicorn[standard]
 numpy
-ultralytics[cpu]
+ultralytics==8.0.196
+torch==2.2.0+cpu
+torchvision==0.17.0+cpu
+--extra-index-url https://download.pytorch.org/whl/cpu
 serpapi
 boto3
 requests
