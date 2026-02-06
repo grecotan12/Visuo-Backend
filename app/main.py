@@ -146,3 +146,7 @@ async def saveRes(user_id: int, category: str, res: List[SearchRes]):
 @app.get("/getTurns/{credits}")
 async def getTurns(credits: int):
     return db_ops.get_rem_times(credits)
+
+@app.get("/test")
+async def test():
+    return "WORKING"
