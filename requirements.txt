@@ -1,5 +1,4 @@
 fastapi
-cv2
 numpy
 ultralytics
 serpapi
