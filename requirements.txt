@@ -1,0 +1,16 @@
+fastapi
+cv2
+numpy
+base64
+ultralytics
+collections
+serpapi
+os
+uuid
+boto3
+json
+http.client
+requests
+pydantic
+typing
+sqlite3
