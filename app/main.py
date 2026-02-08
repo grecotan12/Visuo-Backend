@@ -48,7 +48,6 @@ def startup():
     global db_ops
     db_ops = DatabaseOps()
     db_ops.create_table()
-    print(AUTH_SECRET_KEY)
 
 class DeviceRegisterRes(BaseModel):
     device_id: str
@@ -90,6 +89,7 @@ async def recognize(
     file: UploadFile = File( ... ), 
     device_id: str = Depends(verify_device_token)
 ):
+    print(AUTH_SECRET_KEY)
     contents = await file.read()
     
     # with open("uploads/upload.jpg", "wb") as f:
