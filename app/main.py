@@ -62,7 +62,7 @@ def create_device_token(device_id: str):
 
 @app.post("/register-device", response_model=DeviceRegisterRes)
 @limiter.limit("5/minute")
-async def register_dev():
+async def register_dev(request: Request):
     device_id = str(uuid.uuid4())
     token = create_device_token(device_id)
 
