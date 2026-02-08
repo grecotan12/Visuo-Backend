@@ -61,6 +61,7 @@ def create_device_token(device_id: str):
     return jwt.encode(payload, AUTH_SECRET_KEY, algorithm=ALGORITHM)
 
 @app.post("/register-device", response_model=DeviceRegisterRes)
+@limiter.limit("5/minute")
 async def register_dev():
     device_id = str(uuid.uuid4())
     token = create_device_token(device_id)
