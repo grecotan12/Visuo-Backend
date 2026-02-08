@@ -211,7 +211,7 @@ async def getTurns(credits: int):
 
 @app.get("/test")
 async def test(device_id: str = Depends(verify_device_token)):
-    return "WORKING"
+    return AUTH_SECRET_KEY
 
 
 
