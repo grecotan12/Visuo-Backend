@@ -48,6 +48,7 @@ def startup():
     global db_ops
     db_ops = DatabaseOps()
     db_ops.create_table()
+    print(AUTH_SECRET_KEY)
 
 class DeviceRegisterRes(BaseModel):
     device_id: str
