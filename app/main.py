@@ -222,7 +222,7 @@ async def getTurns():
     global_credits = redis.get("global_credits")
     if not global_credits:
         return 0
-    return db_ops.get_rem_times(global_credits)
+    return db_ops.get_rem_times(int(global_credits))
 
 @app.post("/setCredits/{credits}")
 async def setCredits(credits: int, admin: Admin):
