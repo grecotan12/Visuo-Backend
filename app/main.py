@@ -18,10 +18,12 @@ from datetime import datetime, timedelta
 from fastapi.security import HTTPBearer
 from slowapi import Limiter
 from slowapi.util import get_remote_address
+from redis import Redis
 
 #apt install -y libgl1 libglib2.0-0 // UBUNTU
 
 app = FastAPI()
+redis = Redis(host="localhost", port=6379, decode_responses=True)
 
 def device_key(request):
     return getattr(request.state, "device_id", "anonymous")
@@ -36,6 +38,8 @@ AWS_S3_BUCKET = os.getenv("AWS_S3_BUCKET")
 SERPDEV_API_KEY = os.getenv("SERPDEV_API_KEY")
 # Authentication Per Device #
 AUTH_SECRET_KEY = os.getenv("AUTH_SECRET_KEY")
+ADMIN_USER_NAME = os.getenv("ADMIN_USER_NAME")
+ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD")
 ALGORITHM = "HS256"
 
 s3 = boto3.client(
@@ -144,6 +148,7 @@ async def searchImage(
     conn.request("POST", "/lens", payload, headers)
     res = conn.getresponse()
     data = json.loads(res.read().decode("utf-8"))
+    redis.decrby("global_credits", 3)
     return {"user_id": user_db_id, "organic": data["organic"]}
 
 def is_image_downloadable(url: str):
@@ -208,9 +213,22 @@ async def saveRes(
         else:
             db_ops.insert_search_res(info, category, user_id, info.imageUrl)
 
-@app.get("/getTurns/{credits}")
-async def getTurns(credits: int):
-    return db_ops.get_rem_times(credits)
+class Admin(BaseModel):
+    user_name: str
+    password: str
+
+@app.post("/getTurns")
+async def getTurns():
+    global_credits = redis.get("global_credits")
+    return db_ops.get_rem_times(global_credits)
+
+@app.post("/setCredits/{credits}")
+async def setCredits(credits: int, admin: Admin):
+    if admin.user_name == ADMIN_USER_NAME and admin.password == ADMIN_PASSWORD:
+        redis.set("global_credits", credits)
+        return "SET SUCCESSFULLY"
+    else:
+        return "404 - UNATHORIZED ACCESS"
 
 @app.get("/test")
 async def test(device_id: str = Depends(verify_device_token)):
