@@ -217,7 +217,7 @@ class Admin(BaseModel):
     user_name: str
     password: str
 
-@app.post("/getTurns")
+@app.get("/getTurns")
 async def getTurns():
     global_credits = redis.get("global_credits")
     return db_ops.get_rem_times(global_credits)
