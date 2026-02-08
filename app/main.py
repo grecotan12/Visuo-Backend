@@ -224,7 +224,7 @@ async def getTurns():
         return 0
     return db_ops.get_rem_times(global_credits)
 
-@app.post("/setCredits")
+@app.post("/setCredits/{credits}")
 async def setCredits(credits: int, admin: Admin):
     if admin.user_name == ADMIN_USER_NAME and admin.password == ADMIN_PASSWORD:
         redis.set("global_credits", credits)
