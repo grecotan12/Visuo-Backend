@@ -14,7 +14,7 @@ class DatabaseOps:
         CREATE TABLE IF NOT EXISTS search_res (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             title TEXT NOT NULL UNIQUE,
-            source TEXT NOT NULL UNIQUE,
+            source TEXT NOT NULL,
             link TEXT NOT NULL UNIQUE,
             image_url TEXT NOT NULL UNIQUE,
             category TEXT NOT NULL,
