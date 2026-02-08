@@ -1,4 +1,4 @@
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, File, UploadFile, APIRouter, Depends, Request, HTTPException
 from app.object_detector import ObjectDetector
 import cv2
 import numpy as np
@@ -13,8 +13,16 @@ from app.database_ops import DatabaseOps
 import requests
 from pydantic import BaseModel
 from typing import List
+from jose import jwt, JWTError
+from datetime import datetime, timedelta
+from fastapi.security import HTTPBearer
+from slowapi import Limiter
+from slowapi.util import get_remote_address
+
+#apt install -y libgl1 libglib2.0-0 // UBUNTU
 
 app = FastAPI()
+limiter = Limiter(key_func=lambda request: request.state.device_id)
 
 # TESTING
 AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
@@ -22,6 +30,9 @@ AWS_SECRET_ACCSES_KEY = os.getenv("AWS_SECRET_ACCSES_KEY")
 AWS_REGION = os.getenv("AWS_REGION")
 AWS_S3_BUCKET = os.getenv("AWS_S3_BUCKET")
 SERPDEV_API_KEY = os.getenv("SERPDEV_API_KEY")
+# Authentication Per Device #
+AUTH_SECRET_KEY = "TestingKey"
+ALGORITHM = "HS256"
 
 s3 = boto3.client(
     "s3",
@@ -38,8 +49,45 @@ def startup():
     db_ops = DatabaseOps()
     db_ops.create_table()
 
+class DeviceRegisterRes(BaseModel):
+    device_id: str
+    token: str
+
+def create_device_token(device_id: str):
+    payload = {
+        "sub": device_id,
+        "exp": datetime.utcnow() + timedelta(days=30)
+    }
+    return jwt.encode(payload, AUTH_SECRET_KEY, algorithm=ALGORITHM)
+
+@app.post("/register-device", response_model=DeviceRegisterRes)
+async def register_dev():
+    device_id = str(uuid.uuid4())
+    token = create_device_token(device_id)
+
+    # SAVE INFO AND STUFF HERE
+    dev_info_id = db_ops.insert_dev_info(device_id, token)
+    print(dev_info_id)
+    return DeviceRegisterRes(device_id=device_id, token=token)
+
+auth_scheme = HTTPBearer()
+
+async def verify_device_token(request: Request):
+    creds = await auth_scheme(request)
+    token = creds.credentials
+    try:
+        payload = jwt.decode(token, AUTH_SECRET_KEY, algorithms=[ALGORITHM])
+        request.state.device_id = payload['sub']
+    except JWTError:
+        raise HTTPException(status_code=401, detail="TOKEN HAS BEEN EXPIRED OR INVALID")
+
 @app.post("/recognize")
-async def recognize(file: UploadFile = File( ... )):
+@limiter.limit("10/minute")
+async def recognize(
+    request: Request,
+    file: UploadFile = File( ... ), 
+    device_id: str = Depends(verify_device_token)
+):
     contents = await file.read()
     
     # with open("uploads/upload.jpg", "wb") as f:
@@ -48,9 +96,14 @@ async def recognize(file: UploadFile = File( ... )):
     detector = ObjectDetector()
     return detector.crop_objects(contents)
 
-
 @app.post("/searchImage/{category}")
-async def searchImage(category: str, file: UploadFile = File( ... )):
+@limiter.limit("10/minute")
+async def searchImage(
+    request: Request,
+    category: str, 
+    file: UploadFile = File( ... ), 
+    device_id: str = Depends(verify_device_token)
+):
     # api_key = os.getenv("SERPAPI_KEY")
 
     contents = await file.read()
@@ -114,7 +167,14 @@ class SearchRes(BaseModel):
     imageUrl: str
 
 @app.post("/saveRes/{user_id}/{category}")
-async def saveRes(user_id: int, category: str, res: List[SearchRes]):
+@limiter.limit("10/minute")
+async def saveRes(
+    request: Request,
+    user_id: int, 
+    category: str, 
+    res: List[SearchRes], 
+    device_id: str = Depends(verify_device_token),
+):
     for info in res:
         if is_image_downloadable(info.imageUrl):
             response = requests.get(info.imageUrl)
@@ -148,5 +208,8 @@ async def getTurns(credits: int):
     return db_ops.get_rem_times(credits)
 
 @app.get("/test")
-async def test():
+async def test(device_id: str = Depends(verify_device_token)):
     return "WORKING"
+
+
+

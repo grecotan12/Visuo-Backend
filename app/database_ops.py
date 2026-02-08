@@ -33,6 +33,14 @@ class DatabaseOps:
         );
         """)
 
+        self.cursor.execute("""
+        CREATE TABLE IF NOT EXISTS dev_info (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            device_id TEXT NOT NULL,
+            token TEXT NOT NULL
+        );
+        """)
+
     def insert_user_upload(self, image_url, category):
         self.cursor.execute(
             "INSERT INTO user_info (image_upload, category) VALUES (?, ?)",
@@ -47,6 +55,14 @@ class DatabaseOps:
             (info.title, info.source, info.link, s3_url, category, user_id,)
         )
         self.conn.commit()
+
+    def insert_dev_info(self, device_id, token):
+        self.cursor.execute(
+            "INSERT INTO dev_info (device_id, token) VALUES (?, ?)",
+            (device_id, token,)
+        )
+        self.conn.commit()
+        return self.cursor.lastrowid
 
     def get_rem_times(self, curr):
         self.cursor.execute("SELECT COUNT(*) FROM user_info")
