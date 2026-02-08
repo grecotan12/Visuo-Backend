@@ -22,7 +22,11 @@ from slowapi.util import get_remote_address
 #apt install -y libgl1 libglib2.0-0 // UBUNTU
 
 app = FastAPI()
-limiter = Limiter(key_func=lambda request: request.state.device_id)
+
+def device_key(request):
+    return getattr(request.state, "device_id", "anonymous")
+
+limiter = Limiter(key_func=device_key)
 
 # TESTING
 AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
