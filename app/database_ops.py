@@ -13,10 +13,10 @@ class DatabaseOps:
         self.cursor.execute("""
         CREATE TABLE IF NOT EXISTS search_res (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            title TEXT NOT NULL,
-            source TEXT NOT NULL,
-            link TEXT NOT NULL,
-            image_url TEXT NOT NULL,
+            title TEXT NOT NULL UNIQUE,
+            source TEXT NOT NULL UNIQUE,
+            link TEXT NOT NULL UNIQUE,
+            image_url TEXT NOT NULL UNIQUE,
             category TEXT NOT NULL,
             user_info_id INTEGER NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -27,7 +27,7 @@ class DatabaseOps:
         self.cursor.execute("""
         CREATE TABLE IF NOT EXISTS user_info (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            image_upload TEXT NOT NULL, 
+            image_upload TEXT NOT NULL UNIQUE, 
             category TEXT NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
@@ -36,14 +36,14 @@ class DatabaseOps:
         self.cursor.execute("""
         CREATE TABLE IF NOT EXISTS dev_info (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            device_id TEXT NOT NULL,
-            token TEXT NOT NULL
+            device_id TEXT NOT NULL UNIQUE,
+            token TEXT NOT NULL UNIQUE
         );
         """)
 
     def insert_user_upload(self, image_url, category):
         self.cursor.execute(
-            "INSERT INTO user_info (image_upload, category) VALUES (?, ?)",
+            "INSERT OR IGNORE INTO user_info (image_upload, category) VALUES (?, ?)",
             (image_url, category,)
         )
         self.conn.commit()
@@ -51,14 +51,14 @@ class DatabaseOps:
     
     def insert_search_res(self, info, category, user_id, s3_url):
         self.cursor.execute(
-            "INSERT INTO search_res (title, source, link, image_url, category, user_info_id) VALUES (?, ?, ?, ?, ?, ?)",
+            "INSERT OR IGNORE INTO search_res (title, source, link, image_url, category, user_info_id) VALUES (?, ?, ?, ?, ?, ?)",
             (info.title, info.source, info.link, s3_url, category, user_id,)
         )
         self.conn.commit()
 
     def insert_dev_info(self, device_id, token):
         self.cursor.execute(
-            "INSERT INTO dev_info (device_id, token) VALUES (?, ?)",
+            "INSERT OR IGNORE INTO dev_info (device_id, token) VALUES (?, ?)",
             (device_id, token,)
         )
         self.conn.commit()

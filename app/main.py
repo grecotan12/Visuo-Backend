@@ -76,7 +76,7 @@ async def register_dev(request: Request):
 
     # SAVE INFO AND STUFF HERE
     dev_info_id = db_ops.insert_dev_info(device_id, token)
-    print(dev_info_id)
+
     return DeviceRegisterRes(device_id=device_id, token=token)
 
 auth_scheme = HTTPBearer()
