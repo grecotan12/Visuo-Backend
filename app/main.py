@@ -93,7 +93,6 @@ async def recognize(
     file: UploadFile = File( ... ), 
     device_id: str = Depends(verify_device_token)
 ):
-    print(AUTH_SECRET_KEY)
     contents = await file.read()
     
     # with open("uploads/upload.jpg", "wb") as f:
@@ -215,7 +214,7 @@ async def getTurns(credits: int):
 
 @app.get("/test")
 async def test(device_id: str = Depends(verify_device_token)):
-    return AUTH_SECRET_KEY
+    return "Working"
 
 
 
