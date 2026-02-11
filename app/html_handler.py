@@ -1,4 +1,4 @@
-from html_cleaner import HtmlCleaner
+from app.html_cleaner import HtmlCleaner
 
 class HtmlHandler:
     @staticmethod
