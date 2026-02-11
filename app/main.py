@@ -19,6 +19,7 @@ from fastapi.security import HTTPBearer
 from slowapi import Limiter
 from slowapi.util import get_remote_address
 from redis import Redis
+from app.html_handler import HtmlHandler
 
 #apt install -y libgl1 libglib2.0-0 // UBUNTU
 
@@ -50,6 +51,7 @@ s3 = boto3.client(
 )
 
 db_ops = None
+
 
 @app.on_event("startup")
 def startup():
@@ -231,6 +233,13 @@ async def setCredits(credits: int, admin: Admin):
         return "SET SUCCESSFULLY"
     else:
         return "404 - UNATHORIZED ACCESS"
+
+class Website(BaseModel):
+    link: str
+
+@app.post("/cleanHtml")
+async def cleanHtml(website: Website):
+    return HtmlHandler.get_info(website.link)
 
 @app.get("/test")
 async def test(device_id: str = Depends(verify_device_token)):
