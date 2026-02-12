@@ -12,24 +12,28 @@ class HtmlHandler:
 
         try:
             html = html_obj.clean_html(html)
-        except:
+        except Exception as e:
+            print(e)
             return "UNABLE TO CLEAN HTML"
 
         try:
             html = html_obj.extract_sections(html)
-        except:
+        except Exception as e:
+            print(e)
             return "UNABLE TO EXTRACT SECTIONS"
 
         try:
             html = html_obj.remove_repetitions(html)
-        except:
+        except Exception as e:
+            print(e)
             return "UNABLE TO REMOVE REPETITIONS FROM SECTIONS"
 
         try:
             for sec in html:
                 for con in sec["content"]:
                     con = html_obj.normalize_text(con)
-        except:
+        except Exception as e:
+            print(e)
             return "UNABLE TO NORMALIZE TEXT"
         
         return html
