@@ -112,4 +112,11 @@ class HtmlCleaner:
         for block in html:
             join_content = ". ".join(block["content"])
             doc = Document(join_content)
-            block["content"] = doc.summary(html_partial=True)
+            sum_html = doc.summary(html_partial=True)
+            soup = BeautifulSoup(sum_html, "lxml")
+            body = soup.find("body", id="readabilityBody")
+
+            if body:
+                block["content"] = body.get_text("\n", strip=True)
+            else:
+                block["content"] = soup.get_text("\n", strip=True)
