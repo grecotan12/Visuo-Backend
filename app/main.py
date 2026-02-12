@@ -249,6 +249,7 @@ def getInfo(
         return "FAILED TO GET PAGE INFO"
     
     tiny_llama_api = "http://127.0.0.1:8080/completion"
+
     prompt = f"""
     You are an information extraction system.
 
@@ -271,7 +272,7 @@ def getInfo(
         "repeat_penalty": 1.1
     }
 
-    response = requests.post(url, json=payload)
+    response = requests.post(tiny_llama_api, json=payload)
     return response.json()
 
 @app.get("/test")
