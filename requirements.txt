@@ -11,3 +11,4 @@ slowapi
 redis
 playwright 
 beautifulsoup4 
+lxml

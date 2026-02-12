@@ -237,9 +237,42 @@ async def setCredits(credits: int, admin: Admin):
 class Website(BaseModel):
     link: str
 
-@app.post("/cleanHtml")
-def cleanHtml(website: Website):
-    return HtmlHandler.get_info(website.link)
+# @limiter.limit("10/minute")
+@app.post("/getInfo")
+def getInfo(
+    # request: Request,
+    website: Website,
+    # device_id: str = Depends(verify_device_token),
+):
+    cleaned_html = HtmlHandler.get_info(website.link)
+    if isinstance(clean_html, str):
+        return "FAILED TO GET PAGE INFO"
+    
+    tiny_llama_api = "http://127.0.0.1:8080/completion"
+    prompt = f"""
+    You are an information extraction system.
+
+    If the information I provided is a product. Extract:
+    - price (return NULL if you can't find it)
+    - rating (return NULL if you can't find it)
+    - some positive reviews (return NULL if you can't find it)
+    - some negative reviews (return NULL if you can't find it)
+
+    Return valid JSON only. 
+    Here is the information: 
+    {str(clean_html)}
+    """
+    
+    payload = {
+        "prompt": prompt,
+        "n_predict": 256, 
+        "temperature": 0.0,
+        "top_p": 0.9,
+        "repeat_penalty": 1.1
+    }
+
+    response = requests.post(url, json=payload)
+    return response.json()
 
 @app.get("/test")
 async def test(device_id: str = Depends(verify_device_token)):
