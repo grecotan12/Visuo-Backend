@@ -238,7 +238,7 @@ class Website(BaseModel):
     link: str
 
 @app.post("/cleanHtml")
-async def cleanHtml(website: Website):
+def cleanHtml(website: Website):
     return HtmlHandler.get_info(website.link)
 
 @app.get("/test")
