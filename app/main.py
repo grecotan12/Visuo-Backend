@@ -245,7 +245,7 @@ def getInfo(
     # device_id: str = Depends(verify_device_token),
 ):
     cleaned_html = HtmlHandler.get_info(website.link)
-    if isinstance(clean_html, str):
+    if isinstance(cleaned_html, str):
         return "FAILED TO GET PAGE INFO"
     
     tiny_llama_api = "http://127.0.0.1:8080/completion"
