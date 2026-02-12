@@ -260,7 +260,7 @@ def getInfo(
 
     Return valid JSON only. 
     Here is the information: 
-    {str(clean_html)}
+    {str(cleaned_html)}
     """
     
     payload = {
