@@ -36,6 +36,12 @@ class HtmlHandler:
             print(e)
             return "UNABLE TO NORMALIZE TEXT"
         
+        try:
+            html_obj.flatten_contents(html)
+        except Exception as e:
+            print(e)
+            return "UNABLE TO FLATTEN CONTENT"
+
         return html
 
 

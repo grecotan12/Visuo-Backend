@@ -247,7 +247,9 @@ def getInfo(
     cleaned_html = HtmlHandler.get_info(website.link)
     if isinstance(cleaned_html, str):
         return "FAILED TO GET PAGE INFO"
-    
+    return clean_html
+
+def call_tinyllama(cleaned_compressed_info):
     tiny_llama_api = "http://127.0.0.1:8080/completion"
 
     prompt = f"""
@@ -261,7 +263,7 @@ def getInfo(
 
     Return valid JSON only. 
     Here is the information: 
-    {str(cleaned_html)}
+    {str(cleaned_compressed_info)}
     """
     
     payload = {

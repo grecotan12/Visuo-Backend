@@ -1,6 +1,7 @@
 from playwright.sync_api import sync_playwright
 from bs4 import BeautifulSoup
 import re
+from readability import Document 
 
 class HtmlCleaner:
     def __init__(self, link):
@@ -107,3 +108,8 @@ class HtmlCleaner:
         
         return cleaned
     
+    def flatten_contents(self, html: list):
+        for block in html:
+            join_content = ". ".join(block["content"])
+            doc = Document(join_content)
+            block["content"] = doc.summary(html_partial=True)
