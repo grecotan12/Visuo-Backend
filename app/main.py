@@ -245,7 +245,7 @@ def getInfo(
     # device_id: str = Depends(verify_device_token),
 ):
     cleaned_html = HtmlHandler.get_info(website.link)
-    if isinstance(cleaned_html, str):
+    if "UNABLE" in cleaned_html:
         return cleaned_html
     return call_tinyllama(cleaned_html)
 
