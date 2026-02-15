@@ -247,19 +247,23 @@ def getInfo(
     cleaned_html = HtmlHandler.get_info(website.link)
     if isinstance(cleaned_html, str):
         return "FAILED TO GET PAGE INFO"
-    return cleaned_html
+    for info in cleaned_html:
+        info["content"] = call_tinyllama(info["content"])
+    return clean_html
 
 def call_tinyllama(cleaned_compressed_info):
     tiny_llama_api = "http://127.0.0.1:8080/completion"
 
     prompt = f"""
-    You are an information extraction system.
+    You are a JSON extraction engine.
 
-    If the information I provided is a product. Extract:
-    - price (return NULL if you can't find it)
-    - rating (return NULL if you can't find it)
-    - some positive reviews (return NULL if you can't find it)
-    - some negative reviews (return NULL if you can't find it)
+    If the information I provided is a product. Extract this schema:
+    {{
+        price: value (return NULL if you can't find it)
+        rating: value (return NULL if you can't find it)
+        positive_reviews: value (return NULL if you can't find it)
+        negative_reviews: value (return NULL if you can't find it)
+    }}
 
     Return valid JSON only. 
     Here is the information: 
