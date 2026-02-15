@@ -247,7 +247,7 @@ def getInfo(
     cleaned_html = HtmlHandler.get_info(website.link)
     if isinstance(cleaned_html, str):
         return cleaned_html
-    return cleaned_html
+    return call_tinyllama(cleaned_html)
 
 def call_tinyllama(cleaned_compressed_info):
     tiny_llama_api = "http://127.0.0.1:8080/completion"
