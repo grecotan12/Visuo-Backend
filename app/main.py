@@ -258,12 +258,10 @@ def call_tinyllama(cleaned_compressed_info):
     You are a JSON extraction engine.
 
     If the information I provided is a product. Extract this schema:
-    {{
-        price: value (return NULL if you can't find it)
-        rating: value (return NULL if you can't find it)
-        positive_reviews: value (return NULL if you can't find it)
-        negative_reviews: value (return NULL if you can't find it)
-    }}
+    - price (return NULL if you can't find it)
+    - rating (return NULL if you can't find it)
+    - positive_reviews (return NULL if you can't find it)
+    - negative_reviews (return NULL if you can't find it)
 
     Return valid JSON only. 
     Here is the information: 
