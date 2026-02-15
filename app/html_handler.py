@@ -37,7 +37,7 @@ class HtmlHandler:
             return "UNABLE TO NORMALIZE TEXT"
         
         try:
-            html = html_obj.flatten_contents(html)
+            html_obj.flatten_contents(html)
         except Exception as e:
             print(e)
             return "UNABLE TO FLATTEN CONTENT"
