@@ -247,8 +247,6 @@ def getInfo(
     cleaned_html = HtmlHandler.get_info(website.link)
     if isinstance(cleaned_html, str):
         return "FAILED TO GET PAGE INFO"
-    for info in cleaned_html:
-        info["content"] = call_tinyllama(info["content"])
     return clean_html
 
 def call_tinyllama(cleaned_compressed_info):

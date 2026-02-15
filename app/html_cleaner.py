@@ -109,7 +109,9 @@ class HtmlCleaner:
         return cleaned
     
     def flatten_contents(self, html: list):
+        final_str = ""
         for block in html:
+            final_str += f"TITLE: {block["title"]}. "
             join_content = ". ".join(block["content"])
             doc = Document(join_content)
             sum_html = doc.summary(html_partial=True)
@@ -117,6 +119,8 @@ class HtmlCleaner:
             body = soup.find("body", id="readabilityBody")
 
             if body:
-                block["content"] = body.get_text("\n", strip=True)
+                final_str += "SECTION: " + body.get_text("\n", strip=True) + "\n"
             else:
-                block["content"] = soup.get_text("\n", strip=True)
+                final_str += "SECTION: " + soup.get_text("\n", strip=True) + "\n"
+            final_str += "\n"
+        return final_str
