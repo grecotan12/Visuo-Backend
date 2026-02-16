@@ -246,36 +246,36 @@ def getInfo(
 ):
     cleaned_html = HtmlHandler.get_info(website.link)
     if isinstance(cleaned_html, str):
-        return cleaned_html
-    return call_tinyllama(cleaned_html[0]["content"])
+        return "UNABLE TO GET INFO"
+    return cleaned_html
 
-def call_tinyllama(cleaned_compressed_info):
-    tiny_llama_api = "http://127.0.0.1:8080/completion"
+# def call_tinyllama(cleaned_compressed_info):
+#     tiny_llama_api = "http://127.0.0.1:8080/completion"
 
-    prompt = f"""
-    You are a JSON extraction engine.
+#     prompt = f"""
+#     You are a JSON extraction engine.
 
-    If the information I provided is a product. Extract this schema:
-    - price (return NULL if you can't find it)
-    - rating (return NULL if you can't find it)
-    - positive_reviews (return NULL if you can't find it)
-    - negative_reviews (return NULL if you can't find it)
+#     If the information I provided is a product. Extract this schema:
+#     - price (return NULL if you can't find it)
+#     - rating (return NULL if you can't find it)
+#     - positive_reviews (return NULL if you can't find it)
+#     - negative_reviews (return NULL if you can't find it)
 
-    Return valid JSON only. 
-    Here is the information: 
-    {str(cleaned_compressed_info)}
-    """
+#     Return valid JSON only. 
+#     Here is the information: 
+#     {str(cleaned_compressed_info)}
+#     """
     
-    payload = {
-        "prompt": prompt,
-        "n_predict": 256, 
-        "temperature": 0.0,
-        "top_p": 0.9,
-        "repeat_penalty": 1.1
-    }
+#     payload = {
+#         "prompt": prompt,
+#         "n_predict": 256, 
+#         "temperature": 0.0,
+#         "top_p": 0.9,
+#         "repeat_penalty": 1.1
+#     }
 
-    response = requests.post(tiny_llama_api, json=payload)
-    return response.json()
+#     response = requests.post(tiny_llama_api, json=payload)
+#     return response.json()
 
 @app.get("/test")
 async def test(device_id: str = Depends(verify_device_token)):
