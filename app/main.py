@@ -237,12 +237,12 @@ async def setCredits(credits: int, admin: Admin):
 class Website(BaseModel):
     link: str
 
-# @limiter.limit("10/minute")
 @app.post("/getInfo")
+@limiter.limit("10/minute")
 def getInfo(
-    # request: Request,
+    request: Request,
     website: Website,
-    # device_id: str = Depends(verify_device_token),
+    device_id: str = Depends(verify_device_token)
 ):
     cleaned_html = HtmlHandler.get_info(website.link)
     if isinstance(cleaned_html, str):
