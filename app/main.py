@@ -19,7 +19,6 @@ from fastapi.security import HTTPBearer
 from slowapi import Limiter
 from slowapi.util import get_remote_address
 from redis import Redis
-from app.html_handler import HtmlHandler
 
 #apt install -y libgl1 libglib2.0-0 // UBUNTU
 
