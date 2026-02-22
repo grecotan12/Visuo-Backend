@@ -77,7 +77,7 @@ async def register_dev(request: Request):
     token = create_device_token(device_id)
 
     # SAVE INFO AND STUFF HERE
-    dev_info_id = db_ops.insert_dev_info(device_id, token)
+    db_ops.insert_dev_info(device_id, token)
 
     return DeviceRegisterRes(device_id=device_id, token=token)
 
@@ -233,49 +233,6 @@ async def setCredits(credits: int, admin: Admin):
         return "SET SUCCESSFULLY"
     else:
         return "404 - UNATHORIZED ACCESS"
-
-class Website(BaseModel):
-    link: str
-
-@app.post("/getInfo")
-@limiter.limit("10/minute")
-def getInfo(
-    request: Request,
-    website: Website,
-    device_id: str = Depends(verify_device_token)
-):
-    cleaned_html = HtmlHandler.get_info(website.link)
-    if isinstance(cleaned_html, str):
-        return cleaned_html
-    return cleaned_html
-
-# def call_tinyllama(cleaned_compressed_info):
-#     tiny_llama_api = "http://127.0.0.1:8080/completion"
-
-#     prompt = f"""
-#     You are a JSON extraction engine.
-
-#     If the information I provided is a product. Extract this schema:
-#     - price (return NULL if you can't find it)
-#     - rating (return NULL if you can't find it)
-#     - positive_reviews (return NULL if you can't find it)
-#     - negative_reviews (return NULL if you can't find it)
-
-#     Return valid JSON only. 
-#     Here is the information: 
-#     {str(cleaned_compressed_info)}
-#     """
-    
-#     payload = {
-#         "prompt": prompt,
-#         "n_predict": 256, 
-#         "temperature": 0.0,
-#         "top_p": 0.9,
-#         "repeat_penalty": 1.1
-#     }
-
-#     response = requests.post(tiny_llama_api, json=payload)
-#     return response.json()
 
 @app.get("/test")
 async def test(device_id: str = Depends(verify_device_token)):
