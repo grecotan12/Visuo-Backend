@@ -323,7 +323,7 @@ Otherwise return this exact JSON structure:
             }
         ]
     )
-    
+    print(res)
     return json.loads(res.choices[0].message.content)
 
 @app.post("/generateObjectContext")
