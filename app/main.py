@@ -300,15 +300,15 @@ Instructions:
 
 If the titles are inconsistent or unclear, return:
 
-{
+{{
   "primary_topic": "uncertain",
   "topic_type": "uncertain",
   "confidence": 0.0
-}
+}}
 
 Otherwise return this exact JSON structure:
 
-{
+{{
   "primary_topic": "",
   "topic_type": "",
   "confidence": 0.0,
@@ -318,12 +318,12 @@ Otherwise return this exact JSON structure:
   "history_or_origin": "",
   "interesting_facts": "",
   "related_topics": []
-}
+}}
                 """
             }
         ]
     )
-    print(res)
+
     return json.loads(res.choices[0].message.content)
 
 @app.post("/generateObjectContext")
