@@ -113,7 +113,7 @@ async def generate_object_context(
     device_id: str = Depends(verify_device_token)
 ):
     try:
-        res = await generate_context(request.titles)
+        res = await generate_context(theRequest.titles)
         return res
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
