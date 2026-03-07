@@ -3,7 +3,7 @@ from app.device_auth.routes import router as device_router
 from app.core_apis.routes import router as base_router
 from app.db_api.routes import router as db_router
 from app.credit_apis.routes import router as credit_router
-from database_ops import DatabaseOps
+from app.database_ops import DatabaseOps
 import os
 import boto3
 
