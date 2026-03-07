@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, Request
 from app.device_auth.dependencies import verify_device_token
 from slowapi import Limiter
 from pydantic import BaseModel
@@ -108,7 +108,8 @@ Otherwise return this exact JSON structure:
 @router.post("/generateObjectContext")
 @limiter.limit("10/minute")
 async def generate_object_context(
-    request: TitleRequets,
+    request: Request,
+    theRequest: TitleRequets,
     device_id: str = Depends(verify_device_token)
 ):
     try:
