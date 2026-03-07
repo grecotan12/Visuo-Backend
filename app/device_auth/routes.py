@@ -5,7 +5,7 @@ from jose import jwt, JWTError
 import os
 import uuid
 
-AUTH_SECRET_KEY = "test"
+AUTH_SECRET_KEY = os.getenv("AUTH_SECRET_KEY")
 ALGORITHM = "HS256"
 
 class DeviceRegisterRes(BaseModel):

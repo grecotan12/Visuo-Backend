@@ -4,7 +4,7 @@ import os
 from jose import jwt, JWTError
 
 auth_scheme = HTTPBearer()
-AUTH_SECRET_KEY = "test"
+AUTH_SECRET_KEY = os.getenv("AUTH_SECRET_KEY")
 ALGORITHM = "HS256"
 
 async def verify_device_token(request: Request):
