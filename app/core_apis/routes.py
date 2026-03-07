@@ -46,6 +46,7 @@ async def searchImage(
 ):
     db_ops = request.app.state.db_ops
     s3 = request.app.state.s3
+    redis = request.app.state.redis
     
     contents = await file.read()
 

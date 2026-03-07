@@ -1,7 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends
 from app.device_auth.dependencies import verify_device_token
 from slowapi import Limiter
-from redis import Redis
 from pydantic import BaseModel
 import json
 import os

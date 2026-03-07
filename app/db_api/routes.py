@@ -4,7 +4,6 @@ from slowapi import Limiter
 import numpy as np
 import cv2
 import uuid
-from redis import Redis
 from typing import List
 import requests
 from pydantic import BaseModel
