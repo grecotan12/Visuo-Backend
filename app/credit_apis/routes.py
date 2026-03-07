@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Request
-from redis import Redis
 from pydantic import BaseModel
 import os
 
@@ -13,6 +12,7 @@ class Admin(BaseModel):
 
 @router.get("/getTurns")
 async def getTurns(request: Request):
+    redis = request.app.state.redis
     global_credits = redis.get("global_credits")
     db_ops = request.app.state.db_ops
     if not global_credits:
@@ -20,7 +20,8 @@ async def getTurns(request: Request):
     return db_ops.get_rem_times(int(global_credits))
 
 @router.post("/setCredits/{credits}")
-async def setCredits(credits: int, admin: Admin):
+async def setCredits(request: Request, credits: int, admin: Admin):
+    redis = request.app.state.redis
     if admin.user_name == ADMIN_USER_NAME and admin.password == ADMIN_PASSWORD:
         redis.set("global_credits", credits)
         return "SET SUCCESSFULLY"
